@@ -1,0 +1,104 @@
+/* ==========================================================================
+   Багериста: administration (static/css/admin.css)
+   Linked only by templates/admin/layout.html.
+   ========================================================================== */
+
+/* ==========================================================================
+   26 Admin layout: dark sidebar + concrete workspace
+   ========================================================================== */
+.admin { min-height: 100vh; display: grid; grid-template-rows: auto 1fr; }
+@media (min-width: 60em) { .admin { grid-template-columns: var(--admin-side) minmax(0, 1fr); grid-template-rows: none; } }
+.admin-side { display: flex; flex-direction: column; gap: var(--s-4); padding: var(--s-4) var(--s-3); }
+@media (min-width: 60em) { .admin-side { position: sticky; top: 0; height: 100vh; padding: var(--s-5) var(--s-4); } }
+.admin-side__brand { display: flex; align-items: center; gap: var(--s-2); text-decoration: none; font-family: var(--ff-display); font-weight: 800; font-size: var(--fs-24); }
+.admin-side__brand small { font-family: var(--ff-ui); font-weight: 400; font-size: var(--fs-14); color: var(--text-muted); display: block; }
+.admin-nav__list { list-style: none; display: flex; gap: var(--s-1); overflow-x: auto; }
+@media (min-width: 60em) { .admin-nav__list { flex-direction: column; overflow: visible; } }
+.admin-nav__link {
+  display: flex; align-items: center; gap: var(--s-3); min-height: 2.75rem; padding: 0 var(--s-3);
+  text-decoration: none; font-weight: 600; white-space: nowrap; color: var(--text);
+  border-left: 4px solid transparent;
+}
+.admin-nav__link:hover { background: var(--c-asphalt-2); }
+.admin-nav__link[aria-current="page"] { border-left-color: var(--c-signal); background: var(--c-asphalt-2); font-weight: 700; }
+.admin-nav__link .icon { width: 1.25rem; height: 1.25rem; }
+.admin-nav__link .count { margin-left: auto; }
+.admin-side__user { margin-top: auto; font-size: var(--fs-15); color: var(--text-muted); display: none; }
+@media (min-width: 60em) { .admin-side__user { display: grid; gap: var(--s-2); } }
+
+.admin-main { padding: var(--s-5) var(--gutter) var(--s-8); min-width: 0; }
+.admin-top { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: var(--s-3); padding-bottom: var(--s-4); margin-bottom: var(--s-5); border-bottom: var(--rule-heavy); }
+.admin-top__title { font-size: var(--fs-48); }
+.admin-top__sub { margin: var(--s-2) 0 0; color: var(--text-muted); }
+.panel { background: var(--c-plaster); border: var(--bw-2) solid var(--c-asphalt); padding: var(--s-4) var(--s-5); }
+.panel__head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-3); margin-bottom: var(--s-3); }
+.panel__title { font-family: var(--ff-display); font-weight: 700; font-size: var(--fs-24); line-height: 1.1; }
+.panels { display: grid; gap: var(--col-gap); }
+@media (min-width: 75em) { .panels--2 { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); } }
+.toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: var(--s-3); margin-bottom: var(--s-4); }
+.toolbar .field { min-width: 12rem; }
+.actions { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.actions form { margin: 0; }
+
+/* ==========================================================================
+   27 Dashboard tiles and charts (server-rendered, no chart library)
+   ========================================================================== */
+.stats { display: grid; gap: 1px; background: var(--c-asphalt); border: var(--bw-2) solid var(--c-asphalt); grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); margin-bottom: var(--s-6); }
+.stat { background: var(--c-plaster); padding: var(--s-4); display: grid; gap: var(--s-1); align-content: start; }
+.stat__label { font-size: var(--fs-15); color: var(--c-loam); }
+.stat__value { font-family: var(--ff-display); font-weight: 800; font-size: var(--fs-60); line-height: 0.95; font-variant-numeric: tabular-nums; }
+.stat__value .unit { font-size: 0.45em; }
+.stat__note { font-size: var(--fs-14); color: var(--c-loam); margin: 0; }
+.stat--alert .stat__value { color: var(--c-rust); }
+.stat--alert { box-shadow: inset 0 4px 0 var(--c-rust); }
+
+/* Column chart: <ol class="chart__bars" style="--max:24000"><li style="--v:18400">…
+   The table with the same numbers sits next to it for screen readers. */
+.chart { margin: 0; }
+.chart__plot { position: relative; overflow-x: auto; padding-top: var(--s-5); }
+.chart__bars {
+  list-style: none; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(2.75rem, 1fr); gap: var(--s-2);
+  align-items: end; height: 14rem; min-width: 34rem;
+  background: repeating-linear-gradient(to top, var(--c-rule-soft) 0 1px, transparent 1px 25%);
+  border-bottom: var(--bw-2) solid var(--c-asphalt);
+}
+.chart__bar { position: relative; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: stretch; }
+.chart__fill { display: block; height: calc(var(--v) / var(--max) * 100%); background: var(--c-asphalt); }
+.chart__bar--now .chart__fill { background: var(--c-signal); outline: 2px solid var(--c-asphalt); outline-offset: -2px; }
+.chart__value { position: absolute; left: 50%; transform: translate(-50%, -100%); bottom: calc(var(--v) / var(--max) * 100%); font-size: var(--fs-14); font-weight: 700; white-space: nowrap; padding-bottom: 2px; font-variant-numeric: tabular-nums; }
+.chart__x { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(2.75rem, 1fr); gap: var(--s-2); min-width: 34rem; list-style: none; font-size: var(--fs-14); color: var(--c-loam); text-align: center; padding-top: var(--s-1); }
+.chart__note { font-size: var(--fs-14); color: var(--c-loam); margin-top: var(--s-2); }
+
+/* Horizontal meters: fleet utilisation per machine */
+.meters { list-style: none; display: grid; gap: var(--s-3); }
+.meter { display: grid; grid-template-columns: minmax(8rem, 1fr) 2fr 3.5rem; gap: var(--s-3); align-items: center; font-size: var(--fs-15); }
+.meter__track { height: 0.875rem; background: var(--c-concrete-deep); }
+.meter__fill { display: block; height: 100%; width: calc(var(--v) * 1%); background: var(--c-asphalt); }
+.meter__val { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ==========================================================================
+   28 Admin fleet calendar, callouts, status timeline
+   ========================================================================== */
+.fleet { border-collapse: separate; border-spacing: 2px; font-size: var(--fs-14); }
+.fleet th { font-weight: 600; color: var(--c-loam); text-align: center; padding: 0 0 var(--s-1); font-variant-numeric: tabular-nums; }
+.fleet th[scope="row"] { position: sticky; left: 0; z-index: 1; background: var(--bg); text-align: left; padding-right: var(--s-3); white-space: nowrap; color: var(--text); }
+.fleet td { width: 1.75rem; height: 1.75rem; min-width: 1.75rem; background: var(--c-field); border: 1px solid var(--c-rule-soft); padding: 0; }
+.fleet__we { background: var(--c-concrete-deep) !important; }
+.fleet__approved { background: var(--c-asphalt) !important; border-color: var(--c-asphalt) !important; }
+.fleet__active { background: var(--c-moss) !important; border-color: var(--c-moss) !important; }
+.fleet__new { background: repeating-linear-gradient(45deg, var(--c-asphalt) 0 1.5px, var(--c-signal) 1.5px 6px) !important; }
+.fleet__conflict { outline: 3px solid var(--c-rust); outline-offset: -3px; }
+.fleet__service { background: repeating-linear-gradient(-45deg, var(--c-amber) 0 1.5px, var(--c-amber-tint) 1.5px 6px) !important; }
+
+.callout { padding: var(--s-4) var(--s-5); border: var(--bw-2) solid var(--c-asphalt); border-left-width: 8px; background: var(--c-field); color: var(--c-asphalt); }
+.callout__title { font-family: var(--ff-ui); font-size: var(--fs-17); font-weight: 700; margin-bottom: var(--s-1); }
+.callout p { margin: 0; }
+.callout--warn { border-left-color: var(--c-signal); background: #FFF9EA; }
+.callout--danger { border-color: var(--c-rust); background: #FFF8F5; }
+.callout--danger .callout__title { color: var(--c-rust); }
+
+.timeline { list-style: none; display: grid; gap: 0; border-left: var(--bw-2) solid var(--c-asphalt); margin-left: 0.4rem; }
+.timeline__item { position: relative; padding: 0 0 var(--s-4) var(--s-5); }
+.timeline__item::before { content: ""; position: absolute; left: -0.45rem; top: 0.35rem; width: 0.75rem; height: 0.75rem; background: var(--c-plaster); border: 2px solid var(--c-asphalt); }
+.timeline__when { display: block; font-size: var(--fs-14); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+

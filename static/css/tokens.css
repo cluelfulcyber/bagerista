@@ -1,0 +1,154 @@
+/* ==========================================================================
+   Багериста: design tokens (static/css/tokens.css)
+
+   Stylesheets, in the order base.html links them:
+     fonts.css   @font-face for the vendored woff2 files (no CDN)
+     tokens.css  this file: colours, type scale, spacing, motion (custom properties)
+     app.css     base styles and every public component (§2–25, §30, §31 pages)
+     print.css   the printable quote and @media print (§29)
+     admin.css   admin layout, dashboard, fleet calendar (§26–28), admin pages only
+
+   Naming: one class per element, BEM-lite (block, block__part, block--variant).
+   Components never style bare descendant elements of another component, so a
+   component rule cannot accidentally beat a part rule.
+   ========================================================================== */
+
+/* ==========================================================================
+   1  Tokens
+   ========================================================================== */
+:root {
+  /* ---- Raw palette: the ground the machines dig into, plus one paint ---- */
+  --c-concrete:      #DCD8D0;  /* бетон: page background                         */
+  --c-plaster:       #EFECE6;  /* мазилка: raised surfaces, cards, calendar       */
+  --c-field:         #FBFAF7;  /* input fields, the price slip, printed paper     */
+  --c-concrete-deep: #C9C4BA;  /* recessed areas, weekend days, empty bar tracks  */
+  --c-asphalt:       #25221E;  /* асфалт: ink, rules, dark sections               */
+  --c-asphalt-2:     #3A3631;  /* hover on dark, admin sidebar items              */
+  --c-loam:          #5B4636;  /* пръст: secondary text                           */
+  --c-topsoil:       #7A5E48;  /* illustration only: хумус                        */
+  --c-clay:          #A88660;  /* illustration only: глина                        */
+  --c-gravel:        #BDB3A1;  /* illustration only: чакъл                        */
+  --c-pit:           #CFC9BE;  /* illustration only: the dug trench               */
+  --c-signal:        #F0B323;  /* the one accent: machine paint, action, choice   */
+  --c-signal-deep:   #C98F12;  /* hover/pressed on yellow                         */
+  --c-signal-tint:   #F7DE9C;  /* days inside a selected range, hint bar          */
+  --c-iron:          #57514A;  /* illustration: tracks, buckets, roofs            */
+  --c-glass:         #B4BDB9;  /* illustration: cab glass                         */
+  --c-steel:         #D8D4CC;  /* illustration: rollers, pins, rims               */
+  --c-line:          #6F675C;  /* control borders: 4.7:1 on plaster, 3.9:1 on bg  */
+  --c-line-dark:     #8F877B;  /* control borders on asphalt: 4.5:1               */
+  --c-rule-soft:     #9A9285;  /* table row rules (decorative, still visible on a projector) */
+  --c-muted-dark:    #B9B1A4;  /* secondary text on asphalt: 7.5:1                */
+  --c-moss:          #2A5F38;  /* status: free, ok, approved, active              */
+  --c-moss-tint:     #DCE6D8;
+  --c-amber:         #7A4A00;  /* status: service due soon, warnings              */
+  --c-amber-tint:    #F3E3C4;
+  --c-rust:          #9A3216;  /* status: errors, declined, overdue               */
+  --c-rust-tint:     #F2DCD3;
+
+  /* Brushed aluminium data plate (from concept 1) */
+  --c-plate:         #C9CFD4;
+  --c-plate-hi:      #E4E8EB;
+  --c-plate-lo:      #98A1A9;
+  --c-plate-ink:     #1D232A;
+  --c-plate-ink-2:   #3A434D;
+  --c-plate-band:    #1D232A;
+  --c-plate-etch:    #E6E9EC;
+
+  /* ---- Semantic roles (re-declared inside dark surfaces) ---------------- */
+  --bg:         var(--c-concrete);
+  --surface:    var(--c-plaster);
+  --field:      var(--c-field);
+  --text:       var(--c-asphalt);
+  --text-muted: var(--c-loam);
+  --rule:       var(--c-asphalt);
+  --rule-soft:  var(--c-rule-soft);
+  --control:    var(--c-line);
+  --accent:     var(--c-signal);
+  --focus:      var(--c-asphalt);
+  --paint:      var(--c-signal);
+
+  /* ---- Type ------------------------------------------------------------- */
+  /* Sofia Sans and Sofia Sans Extra Condensed (Lettersoup, Sofia): Bulgarian
+     Cyrillic forms are the default glyphs. Piazzolla: BGR locl via lang="bg". */
+  --ff-display: "Sofia Sans Extra Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --ff-ui:      "Sofia Sans", "Segoe UI", system-ui, sans-serif;
+  --ff-serif:   "Piazzolla", Georgia, "Times New Roman", serif;
+
+  /* Classic scale (Bringhurst): 14 15 17 21 24 30 36 48 60 72 96 144 */
+  --fs-14: 0.875rem;   /* smallest text anywhere: labels, legal, chart values */
+  --fs-15: 0.9375rem;  /* hints, captions, table headers                      */
+  --fs-17: 1.0625rem;  /* body and UI                                         */
+  --fs-21: 1.3125rem;  /* lede (serif), large UI                              */
+  --fs-24: 1.5rem;     /* h4, card titles                                     */
+  --fs-30: 1.875rem;   /* h3                                                  */
+  --fs-36: 2.25rem;
+  --fs-48: 3rem;
+  --fs-60: 3.75rem;
+  --fs-72: 4.5rem;
+  --fs-96: 6rem;
+  --fs-144: 9rem;
+  --fs-h1: clamp(2.75rem, 1.6rem + 4.6vw, 5.5rem);    /* 44 → 88 */
+  --fs-h2: clamp(2rem, 1.5rem + 2.2vw, 3.25rem);      /* 32 → 52 */
+  --fs-h3: clamp(1.5rem, 1.3rem + 0.8vw, 1.875rem);   /* 24 → 30 */
+  --fs-numeral: clamp(4.5rem, 2rem + 9vw, 10rem);     /* 72 → 160, dimension numerals */
+
+  --lh-ui: 1.5;
+  --lh-serif: 1.6;
+  --lh-tight: 1.15;
+  --lh-display: 0.92;
+  --measure: 66ch;
+  --measure-serif: 62ch;
+
+  /* ---- Space (4 px base) ------------------------------------------------ */
+  --s-1: 0.25rem;  --s-2: 0.5rem;  --s-3: 0.75rem; --s-4: 1rem;
+  --s-5: 1.5rem;   --s-6: 2rem;    --s-7: 3rem;    --s-8: 4rem;
+  --s-9: 6rem;     --s-10: 8rem;
+
+  /* ---- Layout ------------------------------------------------------------ */
+  --page-max: 82.5rem;                        /* 1320 px                        */
+  --gutter: clamp(1rem, 0.4rem + 2.6vw, 3rem); /* 16 px on a 360 px phone       */
+  --col-gap: clamp(1rem, 0.6rem + 1.6vw, 2rem);
+  --header-h: 4.5rem;                          /* used for scroll-padding        */
+  --pricebar-h: 4.75rem;                       /* sticky price bar on phones     */
+  --admin-side: 15.5rem;
+
+  /* ---- Lines, radii, depth --------------------------------------------- */
+  --bw-1: 1px; --bw-2: 2px; --bw-3: 3px;
+  --rule-heavy: 6px solid var(--rule);          /* under the header, above sections */
+  --r-0: 0;          /* sheets, tables, buttons, cards: print is square */
+  --r-control: 2px;  /* inputs, day cells                                */
+  --r-plate: 7px;    /* stamped metal plate only                         */
+  --corner: 9px;     /* the machined corner mark on buttons              */
+  --shadow-plate:
+    inset 0 1px 0 rgba(255,255,255,.75),
+    inset 0 -1px 0 rgba(0,0,0,.18),
+    0 2px 0 #8C959D,
+    0 10px 20px -12px rgba(37,34,30,.55);
+
+  /* ---- Motion ------------------------------------------------------------ */
+  --ease-hydraulic: cubic-bezier(0.55, 0, 0.25, 1);   /* slow start, firm stop */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --t-fast: 140ms;
+  --t-mid: 260ms;
+  --t-dig: 1400ms;
+
+  --z-header: 20; --z-pricebar: 30; --z-skip: 50;
+
+  color-scheme: light;
+}
+
+/* Dark surfaces re-declare the semantic roles only. */
+.on-dark {
+  --bg: var(--c-asphalt);
+  --surface: var(--c-asphalt-2);
+  --text: var(--c-plaster);
+  --text-muted: var(--c-muted-dark);
+  --rule: var(--c-plaster);
+  --rule-soft: var(--c-line-dark);
+  --control: var(--c-line-dark);
+  --focus: var(--c-signal);
+  background: var(--bg);
+  color: var(--text);
+}
+
