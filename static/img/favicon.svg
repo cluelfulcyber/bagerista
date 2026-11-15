@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+<title>Багериста</title>
+<rect x="1.5" y="1.5" width="37" height="37" fill="#F0B323" stroke="#25221E" stroke-width="3"/>
+<path fill="#25221E" fill-rule="evenodd" d="M9 7H31V13H15V16H23C29 16 32 19.5 32 24.5C32 29.5 29 33 23 33H9ZM15 21.5V27.5H22.5C24.5 27.5 25.5 26.4 25.5 24.5C25.5 22.6 24.5 21.5 22.5 21.5Z"/>
+<path fill="#25221E" d="M10 33h4l-2 3.5zM17 33h4l-2 3.5zM24 33h4l-2 3.5z"/>
+</svg>

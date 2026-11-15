@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-30 -187 60 191" class="ill ill--person" role="img" aria-labelledby="ill-person-t" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+<title id="ill-person-t">Човек с ръст 1,80 м</title>
+<desc>Фигура за мащаб: работник с каска, висок 1,80 м. Мащаб 1 единица = 10 мм.</desc>
+<path class="ground" d="M-28 0 L28 0" stroke-width="2.5" vector-effect="non-scaling-stroke"/>
+<path class="paint" fill="#F0B323" d="M-13 -164 Q-12 -180 0 -180 Q12 -180 13 -164 Z" vector-effect="non-scaling-stroke"/>
+<path class="thin" stroke-width="1.5" d="M-16 -164 L16 -164" vector-effect="non-scaling-stroke"/>
+<circle class="skin" fill="#EFECE6" cx="0" cy="-152" r="11" vector-effect="non-scaling-stroke"/>
+<path class="plaster" fill="#EFECE6" d="M-14 -138 L14 -138 Q22 -138 22 -128 L23 -78 L15 -78 L14 -100 L12 -78 L12 0 L2 0 L1 -66 L-1 -66 L-2 0 L-12 0 L-12 -78 L-14 -100 L-15 -78 L-23 -78 L-22 -128 Q-22 -138 -14 -138 Z" vector-effect="non-scaling-stroke"/>
+<path class="thin" stroke-width="1" d="M-21 -112 L21 -112 M-21 -104 L21 -104" vector-effect="non-scaling-stroke"/>
+</svg>

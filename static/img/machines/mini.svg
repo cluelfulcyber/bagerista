@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="15 -240 347 244" class="ill ill--mini" role="img" aria-labelledby="ill-mini-t" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+<title id="ill-mini-t">Мини багер</title>
+<desc>Мини багер с отворена кабина, гумени вериги и булдозерна лопата, изглед отстрани. Мащаб 1 единица = 10 мм.</desc>
+<path class="ground" d="M17 0 L360 0" stroke-width="2.5" vector-effect="non-scaling-stroke"/>
+<g class="undercarriage">
+<rect class="tread" x="28" y="-36" width="160" height="36" rx="18" stroke-width="4.5" stroke-dasharray="2.5 4.5" vector-effect="non-scaling-stroke"/>
+<rect class="iron" fill="#57514A" x="30" y="-34" width="156" height="34" rx="17" vector-effect="non-scaling-stroke"/>
+<rect class="steel" fill="#D8D4CC" x="44.3" y="-27.2" width="127.4" height="17" rx="8.5" vector-effect="non-scaling-stroke"/>
+<circle class="steel" fill="#D8D4CC" cx="47" cy="-17" r="12.2" vector-effect="non-scaling-stroke"/>
+<circle class="iron" fill="#57514A" cx="47" cy="-17" r="4.4" vector-effect="non-scaling-stroke"/>
+<circle class="steel" fill="#D8D4CC" cx="169" cy="-17" r="12.2" vector-effect="non-scaling-stroke"/>
+<circle class="iron" fill="#57514A" cx="169" cy="-17" r="3.7" vector-effect="non-scaling-stroke"/>
+<circle class="steel" fill="#D8D4CC" cx="77.5" cy="-8.2" r="4.4" vector-effect="non-scaling-stroke"/>
+<circle class="steel" fill="#D8D4CC" cx="108" cy="-8.2" r="4.4" vector-effect="non-scaling-stroke"/>
+<circle class="steel" fill="#D8D4CC" cx="138.5" cy="-8.2" r="4.4" vector-effect="non-scaling-stroke"/>
+<circle class="steel" fill="#D8D4CC" cx="108" cy="-30.6" r="2.7" vector-effect="non-scaling-stroke"/>
+</g>
+<path class="paint" fill="#F0B323" d="M160.5 -24.5 L193.5 -31.3 L195 -19.7 L163.5 -14.3 Z" vector-effect="non-scaling-stroke"/>
+<path class="paint" fill="#F0B323" d="M190.5 -34 L202.5 -35.4 Q216 -17 213 0 L192 0 Z" vector-effect="non-scaling-stroke"/>
+<path class="thin" stroke-width="1" d="M207 -27.2 Q213 -13.6 210 -2" vector-effect="non-scaling-stroke"/>
+<rect class="iron" fill="#57514A" x="62" y="-42" width="94" height="8" vector-effect="non-scaling-stroke"/>
+<path class="paint" fill="#F0B323" d="M82 -88 L46.7 -88 Q26 -88 24 -67.3 L23 -52 Q24 -42 36 -42 L82 -42 Z" vector-effect="non-scaling-stroke"/>
+<path class="thin" stroke-width="1" d="M36 -74.2 L68 -74.2 M36 -67.3 L68 -67.3 M36 -60.4 L68 -60.4" vector-effect="non-scaling-stroke"/>
+<path class="paint" fill="#F0B323" d="M82 -80 L130 -80 L142 -70 L142 -42 L82 -42 Z" vector-effect="non-scaling-stroke"/>
+<path class="thin" stroke-width="1" d="M112 -68 L112 -48" vector-effect="non-scaling-stroke"/>
+<rect class="iron" fill="#57514A" x="96" y="-94" width="3.9" height="14" vector-effect="non-scaling-stroke"/>
+<path class="paint" fill="#F0B323" d="M138 -74 L145.7 -74 Q166 -72 169.1 -47.3 L167.6 -38 L148 -38 L138 -42 Z" vector-effect="non-scaling-stroke"/>
+<path class="paint" fill="#F0B323" d="M72.2 -42 L72.2 -88.8 Q72.2 -95 78.5 -95 L84.7 -95 L86.3 -62.3 L109.7 -62.3 Q114.4 -62.3 114.4 -57.6 L114.4 -42 Z" vector-effect="non-scaling-stroke"/>
+<path class="iron" fill="#57514A" d="M132.8 -42 L129.7 -79.4 L139.1 -82.6 L143.8 -42 Z" vector-effect="non-scaling-stroke"/>
+<rect class="iron" fill="#57514A" x="66" y="-225.3" width="7" height="183.3" vector-effect="non-scaling-stroke"/>
+<path class="iron" fill="#57514A" d="M129.7 -225.3 L137.5 -225.3 L148.4 -45.1 L140.6 -45.1 Z" vector-effect="non-scaling-stroke"/>
+<rect class="iron" fill="#57514A" x="61.3" y="-231.6" width="85.6" height="7" rx="2.3" vector-effect="non-scaling-stroke"/>
+<path class="thin" stroke-width="1" d="M73 -198.8 L132.8 -198.8" vector-effect="non-scaling-stroke"/>
+<g data-arm="">
+<g data-part="cyl-boom" class="cyl">
+<line class="rod" x1="164" y1="-46" x2="228.3" y2="-111.6" stroke="#8E877C" stroke-width="2.6"/>
+<line class="barrel-o" x1="164" y1="-46" x2="199.7" y2="-82.4" stroke="currentColor" stroke-width="7.3"/>
+<line class="barrel-i" x1="164" y1="-46" x2="199.7" y2="-82.4" stroke="#F0B323" stroke-width="3.3"/>
+<circle class="steel" fill="#D8D4CC" cx="164" cy="-46" r="2.5" vector-effect="non-scaling-stroke"/>
+<circle class="steel" fill="#D8D4CC" cx="228.3" cy="-111.6" r="2.5" vector-effect="non-scaling-stroke"/>
+</g>
+<g data-part="boom" transform="translate(158 -66) rotate(-29)">
+<path class="paint" fill="#F0B323" d="M-10.5 -4.4 L-5.2 -16 L86.2 -39.2 Q101.9 -43.6 115 -36.3 L202.5 -8.7 L205.1 5.8 L196 11.6 L115 -11.6 L101.9 -14.5 L7.8 13.1 L-7.8 10.2 Z" vector-effect="non-scaling-stroke"/>
+<path class="thin" stroke-width="1" d="M13.1 5.8 L98 -18.9 L193.4 4.4" vector-effect="non-scaling-stroke"/>
+<circle class="steel" fill="#D8D4CC" cx="0" cy="0" r="4.4" vector-effect="non-scaling-stroke"/>
+<circle class="steel" fill="#D8D4CC" cx="196" cy="0" r="4.4" vector-effect="non-scaling-stroke"/>
+<circle class="steel" fill="#D8D4CC" cx="98" cy="-33.4" r="3.3" vector-effect="non-scaling-stroke"/>
+<circle class="steel" fill="#D8D4CC" cx="83.6" cy="-5.8" r="3.3" vector-effect="non-scaling-stroke"/>
+</g>
+<g data-part="cyl-stick" class="cyl">
+<line class="rod" x1="227.5" y1="-142.7" x2="338.1" y2="-185.7" stroke="#8E877C" stroke-width="2.5"/>
+<line class="barrel-o" x1="227.5" y1="-142.7" x2="292.5" y2="-168" stroke="currentColor" stroke-width="6.9"/>
+<line class="barrel-i" x1="227.5" y1="-142.7" x2="292.5" y2="-168" stroke="#F0B323" stroke-width="2.9"/>
+<circle class="steel" fill="#D8D4CC" cx="227.5" cy="-142.7" r="2.3" vector-effect="non-scaling-stroke"/>
+<circle class="steel" fill="#D8D4CC" cx="338.1" cy="-185.7" r="2.3" vector-effect="non-scaling-stroke"/>
+</g>
+<g data-part="stick" transform="translate(329.4 -161) rotate(84)">
+<path class="paint" fill="#F0B323" d="M-31.1 -16.8 L-17.4 -23.8 L104.5 -9.8 L115.7 -3.5 L115.7 4.9 L104.5 9.1 L3.7 10.5 L-12.4 7.7 L-29.9 -4.2 Z" vector-effect="non-scaling-stroke"/>
+<circle class="steel" fill="#D8D4CC" cx="0" cy="0" r="3.9" vector-effect="non-scaling-stroke"/>
+<circle class="steel" fill="#D8D4CC" cx="112" cy="0" r="3.5" vector-effect="non-scaling-stroke"/>
+<circle class="steel" fill="#D8D4CC" cx="-23.6" cy="-11.2" r="3.2" vector-effect="non-scaling-stroke"/>
+<circle class="steel" fill="#D8D4CC" cx="14.9" cy="-15.4" r="2.8" vector-effect="non-scaling-stroke"/>
+</g>
+<g data-part="bucket" transform="translate(341.1 -49.6) rotate(128)">
+<path class="iron" fill="#57514A" d="M-4.6 4.6 L-5.2 -9.3 L3.5 -16.2 L17.4 -29 Q32.5 -38.3 44.1 -23.2 L47.6 -10.4 L53.9 -2.9 L47.6 1.7 L8.1 7 Z" vector-effect="non-scaling-stroke"/>
+<path class="thin" stroke-width="1" d="M46.4 -10.4 L41.8 1.2 M-1.2 -3.5 L12.8 -20.9" vector-effect="non-scaling-stroke"/>
+<circle class="steel" fill="#D8D4CC" cx="0" cy="0" r="2.6" vector-effect="non-scaling-stroke"/>
+<circle class="steel" fill="#D8D4CC" cx="3.5" cy="-15.1" r="2" vector-effect="non-scaling-stroke"/>
+</g>
+<g data-part="cyl-bucket" class="cyl">
+<line class="rod" x1="346.3" y1="-147.8" x2="350.9" y2="-37.6" stroke="#8E877C" stroke-width="2.5"/>
+<line class="barrel-o" x1="346.3" y1="-147.8" x2="349.5" y2="-70.7" stroke="currentColor" stroke-width="6.2"/>
+<line class="barrel-i" x1="346.3" y1="-147.8" x2="349.5" y2="-70.7" stroke="#F0B323" stroke-width="2.2"/>
+<circle class="steel" fill="#D8D4CC" cx="346.3" cy="-147.8" r="2.1" vector-effect="non-scaling-stroke"/>
+<circle class="steel" fill="#D8D4CC" cx="350.9" cy="-37.6" r="2.1" vector-effect="non-scaling-stroke"/>
+</g>
+</g>
+</svg>
