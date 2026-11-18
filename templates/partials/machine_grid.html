@@ -1,0 +1,17 @@
+{#- The catalogue results (swapped by htmx). Expects `cards: Vec<views::MachineCard>`. -#}
+{%- if cards.is_empty() %}
+<div class="empty">
+  {% include "partials/phantom_mini.html" %}
+  <div>
+    <h3 class="empty__title">Нямаме машина с тези условия</h3>
+    <p class="empty__text">Махнете един филтър или ни се обадете на 032 64 12 80 и ще намерим решение.</p>
+    <a class="btn btn--ghost" href="/katalog">Изчисти филтрите</a>
+  </div>
+</div>
+{%- else %}
+<div class="cards">
+  {%- for card in cards %}
+  {% include "partials/machine_card.html" %}
+  {%- endfor %}
+</div>
+{%- endif %}

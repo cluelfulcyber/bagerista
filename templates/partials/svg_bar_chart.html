@@ -1,0 +1,26 @@
+{#- Column chart drawn with CSS from server data (design §6.26), plus a
+    visually hidden table with the same numbers for screen readers.
+    Expects `chart: views::BarChart`. Needs admin.css. -#}
+<figure class="chart">
+  <div class="chart__plot">
+    <ol class="chart__bars" style="--max:{{ chart.max }}" aria-hidden="true">
+      {%- for bar in chart.bars %}
+      <li class="chart__bar{% if bar.is_current %} chart__bar--now{% endif %}" style="--v:{{ bar.value }}"><span class="chart__value">{{ bar.value_text }}</span><span class="chart__fill"></span></li>
+      {%- endfor %}
+    </ol>
+    <ol class="chart__x" aria-hidden="true">
+      {%- for bar in chart.bars %}<li>{{ bar.axis_label }}</li>{% endfor -%}
+    </ol>
+  </div>
+  {%- if !chart.note.is_empty() %}
+  <figcaption class="chart__note">{{ chart.note }}</figcaption>
+  {%- endif %}
+  <table class="visually-hidden">
+    <caption>{{ chart.caption }}</caption>
+    <tbody>
+      {%- for bar in chart.bars %}
+      <tr><th scope="row">{{ bar.full_label }}</th><td>{{ bar.value_full }}</td></tr>
+      {%- endfor %}
+    </tbody>
+  </table>
+</figure>

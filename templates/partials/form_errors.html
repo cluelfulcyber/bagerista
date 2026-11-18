@@ -1,0 +1,12 @@
+{#- Error summary at the top of a form after a 422 (design §6.3): „Проверете 2 полета“
+    with links to the fields (ids `f-{name}`). Expects `errors: page::FormErrors`. -#}
+{%- if !errors.is_empty() %}
+<div class="form-errors" role="alert" aria-labelledby="form-errors-title" tabindex="-1">
+  <h3 class="form-errors__title" id="form-errors-title">{{ errors.summary_title() }}</h3>
+  <ul class="form-errors__list">
+    {%- for e in errors.0 %}
+    <li><a href="#f-{{ e.field }}">{{ e.message }}</a></li>
+    {%- endfor %}
+  </ul>
+</div>
+{%- endif %}

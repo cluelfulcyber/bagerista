@@ -1,0 +1,32 @@
+{#- One month of a machine's free and booked days (design §6.14).
+    Expects `cal: views::CalendarMonthView`. It is the content of
+    <div class="cal" data-calendar> on the machine page; htmx replaces it when
+    the month changes (GET /mashini/{slug}/kalendar?mesec=…), and without
+    JavaScript the arrows are ordinary links to the machine page.
+    Clicks on days are handled by static/js/calendar.js. -#}
+<div class="cal__head">
+  <h3 class="cal__month" id="cal-month">{{ cal.title() }}</h3>
+  <div class="cal__nav">
+    {%- if cal.has_prev %}
+    <a class="cal__navbtn" href="?mesec={{ cal.prev_param() }}#nalichnost" hx-get="/mashini/{{ cal.machine_slug }}/kalendar?mesec={{ cal.prev_param() }}" hx-target="closest .cal" aria-label="{{ cal.prev_label() }}"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 2.5 5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.4"/></svg></a>
+    {%- endif %}
+    <a class="cal__navbtn" href="?mesec={{ cal.next_param() }}#nalichnost" hx-get="/mashini/{{ cal.machine_slug }}/kalendar?mesec={{ cal.next_param() }}" hx-target="closest .cal" aria-label="{{ cal.next_label() }}"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 2.5 11 8l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.4"/></svg></a>
+  </div>
+</div>
+<div class="cal__grid" role="group" aria-labelledby="cal-month">
+  <span class="cal__dow">пн</span><span class="cal__dow">вт</span><span class="cal__dow">ср</span><span class="cal__dow">чт</span><span class="cal__dow">пт</span><span class="cal__dow cal__dow--we">сб</span><span class="cal__dow cal__dow--we">нд</span>
+  {%- for _ in cal.blanks %}
+  <span class="cal__day cal__day--blank" aria-hidden="true"></span>
+  {%- endfor %}
+  {%- for day in cal.days %}
+  <button class="{{ cal.day_class(day) }}" type="button" data-date="{{ day.date }}" aria-label="{{ cal.day_label(day) }}"{% if cal.is_disabled(day) %} disabled{% else %} aria-pressed="{{ cal.pressed(day) }}"{% endif %}><span class="cal__num">{{ cal.day_number(day) }}</span>{% if !cal.day_tag(day).is_empty() %}<span class="cal__tag">{{ cal.day_tag(day) }}</span>{% endif %}</button>
+  {%- endfor %}
+</div>
+<p class="cal__msg" aria-live="polite">{{ cal.message() }}</p>
+<ul class="cal__legend" aria-label="Легенда">
+  <li class="cal__key"><span class="cal__swatch"></span>свободен</li>
+  <li class="cal__key"><span class="cal__swatch cal__swatch--weekend"></span>събота и неделя, ½ цена</li>
+  <li class="cal__key"><span class="cal__swatch cal__swatch--booked"></span>зает</li>
+  <li class="cal__key"><span class="cal__swatch cal__swatch--range"></span>избран период</li>
+  <li class="cal__key"><span class="cal__swatch cal__swatch--end"></span>първи и последен ден</li>
+</ul>

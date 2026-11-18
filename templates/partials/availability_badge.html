@@ -1,0 +1,3 @@
+{#- „Свободна“ / „Свободна до 18 окт.“ / „Заета до 14 окт.“ (design §6.5).
+    Expects `availability: services::availability::Availability`. -#}
+<span class="badge {{ availability.css_class() }}">{{ availability.label() }}</span>

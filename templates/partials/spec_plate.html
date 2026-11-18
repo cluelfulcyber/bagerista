@@ -1,0 +1,15 @@
+{#- The aluminium data plate (design §6.7). Expects `machine: models::Machine`. -#}
+<div class="plate">
+  <div class="plate__band"><span class="plate__maker">{{ machine.brand_caps() }}</span><span class="plate__code">{{ machine.catalog_no() }}</span></div>
+  <dl class="plate__rows">
+    <dt class="plate__key">Модел</dt><dd class="plate__val">{{ machine.model }}</dd>
+    <dt class="plate__key">Работно тегло</dt><dd class="plate__val">{{ crate::format::number(*machine.weight_kg) }}<span class="plate__unit">кг</span></dd>
+    <dt class="plate__key">Дълбочина на копаене</dt><dd class="plate__val">{{ crate::format::number(*machine.dig_depth_mm) }}<span class="plate__unit">мм</span></dd>
+    <dt class="plate__key">Транспортна ширина</dt><dd class="plate__val">{{ crate::format::number(*machine.width_mm) }}<span class="plate__unit">мм</span></dd>
+    <dt class="plate__key">Височина</dt><dd class="plate__val">{{ crate::format::number(*machine.height_mm) }}<span class="plate__unit">мм</span></dd>
+    <dt class="plate__key">Двигател</dt><dd class="plate__val">{{ crate::format::decimal(*machine.engine_kw) }}<span class="plate__unit">kW</span></dd>
+    <dt class="plate__key">Стандартна кофа</dt><dd class="plate__val">{{ crate::format::number(*machine.bucket_l) }}<span class="plate__unit">л</span></dd>
+    <dt class="plate__key">{{ machine.undercarriage.label() }}</dt><dd class="plate__val">{{ machine.undercarriage_text() }}</dd>
+  </dl>
+  <div class="plate__foot"><span>Година {{ machine.year_made }}</span><span>Моточасове {{ crate::format::number(*machine.engine_hours) }}</span></div>
+</div>

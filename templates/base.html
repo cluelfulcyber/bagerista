@@ -1,0 +1,118 @@
+{#- The public site layout: utility bar, header, flash, footer.
+    Every page template does {% extends "base.html" %}, fills {% block content %}
+    and has the field `layout: page::Layout` (see src/routes/page.rs).
+    Optional blocks: head (extra <link>), body_class, scripts (extra JS). -#}
+<!doctype html>
+<html lang="bg">
+<head>
+{% include "partials/head.html" %}
+{% block head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}" hx-headers='{"X-CSRF-Token": "{{ layout.csrf_token }}"}'>
+<a class="skip-link" href="#main">Към съдържанието</a>
+
+<div class="utility on-dark">
+  <div class="wrap utility__inner">
+    <p class="utility__where">Склад и офис: Пловдив, бул. „Кукленско шосе“ 17</p>
+    <div class="utility__tools">
+      <span class="utility__hours">пн–пт 7:30–18:00, сб 8:00–13:00</span>
+      <a class="utility__tel" href="tel:+35932641280">032 64 12 80</a>
+      <fieldset class="vat" data-vat-switch hidden>
+        <legend class="vat__legend">Показвай цените</legend>
+        <label class="vat__opt"><input class="vat__input" type="radio" name="vat" value="net" checked><span class="vat__label">без ДДС</span></label>
+        <label class="vat__opt"><input class="vat__input" type="radio" name="vat" value="gross"><span class="vat__label">с ДДС</span></label>
+      </fieldset>
+    </div>
+  </div>
+</div>
+<header class="site-header">
+  <div class="wrap site-header__bar">
+    <a class="brand" href="/">{% include "partials/brand_mark.html" %}<span><span class="brand__name">Багериста</span><span class="brand__sub">наем на багери, Пловдив</span></span></a>
+    <nav class="nav" id="main-nav" aria-label="Основно меню">
+      <ul class="nav__list">
+        <li><a class="nav__link" href="/katalog"{% if layout.nav_is("katalog") %} aria-current="page"{% endif %}>Каталог</a></li>
+        <li><a class="nav__link" href="/pomoshtnik"{% if layout.nav_is("pomoshtnik") %} aria-current="page"{% endif %}>Кой багер ми трябва?</a></li>
+        <li><a class="nav__link" href="/ceni"{% if layout.nav_is("ceni") %} aria-current="page"{% endif %}>Цени и условия</a></li>
+        <li><a class="nav__link" href="/za-nas"{% if layout.nav_is("za-nas") %} aria-current="page"{% endif %}>За нас</a></li>
+        <li><a class="nav__link" href="/kontakti"{% if layout.nav_is("kontakti") %} aria-current="page"{% endif %}>Контакти</a></li>
+        {%- if layout.is_admin() %}
+        <li class="nav__extra"><a class="nav__link" href="/admin">Администрация</a></li>
+        {%- else if layout.is_client() %}
+        <li class="nav__extra"><a class="nav__link" href="/moite-zayavki">Моите заявки</a></li>
+        <li class="nav__extra"><a class="nav__link" href="/profil">Профил</a></li>
+        {%- else %}
+        <li class="nav__extra"><a class="nav__link" href="{{ layout.login_href() }}">Вход</a></li>
+        {%- endif %}
+        {%- if layout.user.is_some() %}
+        <li class="nav__extra">{% let logout_class = "nav__link nav__logout" %}{% include "partials/logout_form.html" %}</li>
+        {%- endif %}
+      </ul>
+    </nav>
+    <div class="header-actions{% if layout.user.is_some() %} header-actions--user{% endif %}">
+      {%- if layout.is_admin() %}
+      <a class="header-actions__login" href="/admin">Администрация</a>
+      {%- else if layout.is_client() %}
+      <a class="header-actions__login" href="/moite-zayavki">Моите заявки</a>
+      {%- else %}
+      <a class="header-actions__login" href="{{ layout.login_href() }}">Вход</a>
+      {%- endif %}
+      {%- if layout.user.is_some() %}
+      <div class="header-actions__logout">{% let logout_class = "header-actions__login header-actions__button" %}{% include "partials/logout_form.html" %}</div>
+      {%- endif %}
+      <a class="btn btn--sm" href="/katalog">Избери багер</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav"><svg class="nav-toggle__icon" viewBox="0 0 18 18" aria-hidden="true"><path d="M1 4h16M1 9h16M1 14h16" stroke="currentColor" stroke-width="2"/></svg>Меню</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+{%- if let Some(flash) = layout.flash %}
+  <div class="wrap flashes">{% include "partials/flash.html" %}</div>
+{%- endif %}
+{% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer on-dark">
+  <div class="wrap">
+    <span class="site-footer__wordmark" aria-hidden="true">Багериста</span>
+    <div class="site-footer__grid">
+      <div class="site-footer__cols">
+        <nav aria-labelledby="f-cat"><h2 class="site-footer__h" id="f-cat">Каталог</h2>
+          <ul class="site-footer__links">
+            <li><a class="site-footer__link" href="/katalog?kategoria=mini-bageri">Мини багери</a></li>
+            <li><a class="site-footer__link" href="/katalog?kategoria=midibageri">Мидибагери</a></li>
+            <li><a class="site-footer__link" href="/katalog?kategoria=verizhni-bageri">Верижни багери</a></li>
+            <li><a class="site-footer__link" href="/katalog?kategoria=kolesni-bageri">Колесни багери</a></li>
+            <li><a class="site-footer__link" href="/katalog?kategoria=bager-tovarachi">Багер-товарачи</a></li>
+          </ul></nav>
+        <nav aria-labelledby="f-help"><h2 class="site-footer__h" id="f-help">Помощ</h2>
+          <ul class="site-footer__links">
+            <li><a class="site-footer__link" href="/pomoshtnik">Кой багер ми трябва?</a></li>
+            <li><a class="site-footer__link" href="/ceni">Цени и условия</a></li>
+            <li><a class="site-footer__link" href="/moite-zayavki">Моите заявки</a></li>
+            <li><a class="site-footer__link" href="/kontakti">Контакти</a></li>
+          </ul></nav>
+      </div>
+      <dl class="tblock tblock--dark" aria-label="Данни за фирмата">
+        <div class="tblock__cell tblock__cell--wide"><dt class="tblock__k">Фирма</dt><dd class="tblock__v tblock__v--lg">Багериста ЕООД</dd><dd class="tblock__k">ЕИК 205 873 114</dd></div>
+        <div class="tblock__cell"><dt class="tblock__k">Склад и офис</dt><dd class="tblock__v">Пловдив, бул. „Кукленско шосе“ 17</dd></div>
+        <div class="tblock__cell"><dt class="tblock__k">Телефон</dt><dd class="tblock__v"><a href="tel:+35932641280">032 64 12 80</a></dd></div>
+        <div class="tblock__cell"><dt class="tblock__k">Имейл</dt><dd class="tblock__v"><a href="mailto:naem@bagerista.bg">naem@bagerista.bg</a></dd></div>
+        <div class="tblock__cell"><dt class="tblock__k">Работно време</dt><dd class="tblock__v">пн–пт 7:30–18:00, сб 8:00–13:00</dd></div>
+        <div class="tblock__cell"><dt class="tblock__k">Цени</dt><dd class="tblock__v">в евро, без ДДС</dd></div>
+        <div class="tblock__cell"><dt class="tblock__k">Последна промяна</dt><dd class="tblock__v num">{{ layout.today_num() }}</dd></div>
+      </dl>
+    </div>
+    <div class="site-footer__legal">
+      <p>Дипломен проект „Багериста“, 2026. Машините и цените са примерни.</p>
+      <p>Техническите данни са по каталозите на производителите.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="/static/js/htmx.min.js" defer></script>
+<script src="/static/js/nav.js" defer></script>
+<script src="/static/js/vat.js" defer></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

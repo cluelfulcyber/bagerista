@@ -1,0 +1,14 @@
+{#- The itemised price (design §6.15, architecture §4.4). Expects `slip: views::PriceSlip`.
+    The machine page puts it inside <div class="slip"> under the title and the period;
+    calculator.js later replaces the texts marked data-q with the server's new quote.
+    Lines that are zero stay in the HTML with `hidden`, so the script can show them. -#}
+<div class="slip__lines">
+  <div class="slip__line"><span class="slip__label">Машина и приставки, делнични дни</span><span class="slip__calc" data-q="weekdays">{{ slip.weekdays_calc() }}</span><span class="slip__amount" data-q="weekdaysAmt">{{ crate::format::money(*slip.b.weekday_equipment_cents) }}</span></div>
+  <div class="slip__line" data-q-row="weekend"{% if slip.b.weekend_days == 0 %} hidden{% endif %}><span class="slip__label">Събота и неделя</span><span class="slip__calc" data-q="weekend">{{ slip.weekend_calc() }}</span><span class="slip__amount" data-q="weekendAmt">{{ crate::format::money(*slip.b.weekend_equipment_cents) }}</span></div>
+  <div class="slip__line slip__line--discount" data-q-row="discount"{% if slip.b.discount_cents == 0 %} hidden{% endif %}><span class="slip__label" data-q="discountLabel">{{ slip.discount_label() }}</span><span class="slip__calc">върху машината и приставките</span><span class="slip__amount" data-q="discountAmt">{{ crate::format::money(0 - slip.b.discount_cents) }}</span></div>
+  <div class="slip__line" data-q-row="operator"{% if slip.b.operator_cents == 0 %} hidden{% endif %}><span class="slip__label">Оператор</span><span class="slip__calc" data-q="operator">{{ slip.operator_calc() }}</span><span class="slip__amount" data-q="operatorAmt">{{ crate::format::money(*slip.b.operator_cents) }}</span></div>
+  <div class="slip__line" data-q-row="transport"{% if slip.b.transport_cents == 0 %} hidden{% endif %}><span class="slip__label">Транспорт, докарване и връщане</span><span class="slip__calc" data-q="transport">{{ slip.transport_calc() }}</span><span class="slip__amount" data-q="transportAmt">{{ crate::format::money(*slip.b.transport_cents) }}</span></div>
+  <div class="slip__line slip__line--sum"><span class="slip__label">Общо без ДДС</span><span class="slip__amount" data-q="net">{{ crate::format::money(*slip.b.net_cents) }}</span></div>
+  <div class="slip__line"><span class="slip__label">{{ slip.vat_label() }}</span><span class="slip__amount" data-q="vat">{{ crate::format::money(*slip.b.vat_cents) }}</span></div>
+</div>
+<div class="slip__grand"><span class="slip__grand-label">Общо с ДДС</span><span class="slip__grand-amount" data-q="total">{{ crate::format::money(*slip.b.total_cents) }}</span></div>

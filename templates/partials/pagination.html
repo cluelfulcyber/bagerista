@@ -1,0 +1,10 @@
+{#- Page links under a long list. Expects `pager: views::Pagination`. -#}
+{%- if pager.is_needed() %}
+<nav aria-label="Страници">
+  <ol class="pager">
+    {%- for link in pager.links() %}
+    <li><a class="pager__link" href="{{ link.href }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.number }}</a></li>
+    {%- endfor %}
+  </ol>
+</nav>
+{%- endif %}

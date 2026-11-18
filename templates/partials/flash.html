@@ -1,0 +1,13 @@
+{#- One flash message (design §6.4). Expects `flash: page::Flash`.
+    Rendered by base.html after a redirect, and alone as the htmx error fragment. -#}
+<div class="flash {{ flash.css_class() }}" role="{{ flash.role() }}">
+  {%- if flash.is("ok") %}<svg class="flash__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="3"/></svg>
+  {%- else if flash.is("warn") %}<svg class="flash__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 22 20H2Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M12 9.5v5M12 16.5v1.5" stroke="currentColor" stroke-width="2.6"/></svg>
+  {%- else if flash.is("error") %}<svg class="flash__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M8 8l8 8M16 8l-8 8" stroke="currentColor" stroke-width="2.6"/></svg>
+  {%- else %}<svg class="flash__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 10.5v7M12 6.5v1.5" stroke="currentColor" stroke-width="2.6"/></svg>
+  {%- endif %}
+  <p class="flash__text">{% if !flash.title.is_empty() %}<span class="flash__title">{{ flash.title }}</span>{% endif %}{{ flash.text }}</p>
+  {%- if !flash.is("error") %}
+  <button class="flash__close" type="button" aria-label="Затвори съобщението" hidden>×</button>
+  {%- endif %}
+</div>

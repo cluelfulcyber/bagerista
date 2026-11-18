@@ -1,0 +1,16 @@
+{#- Shared <head> content of base.html and admin/layout.html. Expects `layout: page::Layout`. -#}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ layout.title }}</title>
+<meta name="description" content="{{ layout.description }}">
+<meta name="csrf-token" content="{{ layout.csrf_token }}">
+{#- htmx: no inline indicator styles (CSP), and error responses (4xx/5xx) are
+    swapped too, so the small alert from lib.rs::htmx_errors becomes visible. #}
+<meta name="htmx-config" content='{"includeIndicatorStyles":false,"responseHandling":[{"code":"204","swap":false},{"code":"[23]..","swap":true},{"code":"[45]..","swap":true,"error":true}]}'>
+<link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/static/fonts/sofia-sans-xc-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/static/fonts/sofia-sans-xc-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/static/css/fonts.css">
+<link rel="stylesheet" href="/static/css/tokens.css">
+<link rel="stylesheet" href="/static/css/app.css">
+<link rel="stylesheet" href="/static/css/print.css">

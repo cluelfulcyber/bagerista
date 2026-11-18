@@ -1,0 +1,8 @@
+{#- The message under one input (design §6.3). Expects `errors: page::FormErrors`
+    and `field` (the input's name). The input itself carries
+    aria-invalid="true" aria-describedby="f-{field}-err" when errors.has(field):
+      <input class="input" id="f-email" name="email" {% if errors.has("email") %}aria-invalid="true" aria-describedby="f-email-err"{% endif %}>
+      {% let field = "email" %}{% include "partials/field_error.html" %} -#}
+{%- if let Some(message) = errors.get(field) %}
+<p class="field__error" id="f-{{ field }}-err">{{ message }}</p>
+{%- endif %}

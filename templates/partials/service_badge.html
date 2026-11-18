@@ -1,0 +1,3 @@
+{#- Maintenance by engine hours (design §6.5).
+    Expects `service: services::maintenance::MaintenanceStatus`. -#}
+<span class="service {{ service.level.css_class() }}">{{ service.message }}</span>

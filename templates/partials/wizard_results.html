@@ -1,0 +1,39 @@
+{#- Wizard recommendations (design §6.13). Expects `results: views::WizardResults`.
+    Swapped by htmx on /pomoshtnik/rezultat; the wizard track fills in the page around it. -#}
+<div class="wizard__results" id="rezultat" aria-live="polite">
+  {%- if results.no_match %}
+  <div class="empty">
+    {% include "partials/phantom_mini.html" %}
+    <div>
+      <h3 class="empty__title">Нямаме точна машина</h3>
+      <p class="empty__text">{{ results.no_match_message() }}</p>
+      <a class="btn btn--ghost" href="tel:+35932641280">Обадете се: 032 64 12 80</a>
+    </div>
+  </div>
+  {%- endif %}
+  {%- if !results.recs.is_empty() %}
+  <ol class="recs">
+    {%- for r in results.recs %}
+    <li class="rec{% if loop.first && !results.no_match %} rec--best{% endif %}">
+      <div><span class="rec__match">{{ r.rec.score }} %</span><span class="rec__match-label">съвпадение</span></div>
+      <div>
+        <h3 class="rec__name">{{ r.machine.name }}</h3>
+        <ul class="rec__reasons">
+          {%- for reason in r.rec.reasons %}
+          <li class="rec__reason">{{ reason }}</li>
+          {%- endfor %}
+        </ul>
+        {%- if !r.rec.caveats.is_empty() %}
+        <ul class="rec__caveats">
+          {%- for caveat in r.rec.caveats %}
+          <li class="rec__caveat">{{ caveat }}</li>
+          {%- endfor %}
+        </ul>
+        {%- endif %}
+      </div>
+      <div class="rec__side"><span class="price"><data value="{{ r.machine.price_per_day_cents }}" data-net>{{ crate::format::money(*r.machine.price_per_day_cents) }}</data></span><span class="small muted">на ден, <span data-vat-label>без ДДС</span></span><a class="btn btn--sm{% if !loop.first || results.no_match %} btn--ghost{% endif %}" href="/mashini/{{ r.machine.slug }}">Виж машината</a></div>
+    </li>
+    {%- endfor %}
+  </ol>
+  {%- endif %}
+</div>

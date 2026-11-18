@@ -1,0 +1,21 @@
+{#- One template for 403/404/409/429/500 (design §6.24). Struct: errors::ErrorPage. -#}
+{% extends "base.html" %}
+{% block content %}
+<div class="wrap">
+  <section class="errpage" aria-labelledby="err-title">
+    <div class="errpage__code" aria-hidden="true"><span class="errpage__num">{{ code }}</span><span class="errpage__dim"></span></div>
+    <div>
+      <h1 class="errpage__title" id="err-title">{{ title }}</h1>
+      <p>{{ message }}</p>
+      <div class="errpage__actions">
+        {%- if self.is_server_error() %}
+        <a class="btn" href="">Опитай отново</a>
+        {%- else %}
+        <a class="btn" href="/katalog">Към каталога</a>
+        {%- endif %}
+        <a class="btn btn--ghost" href="/">Начална страница</a>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

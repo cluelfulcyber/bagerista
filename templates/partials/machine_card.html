@@ -1,0 +1,20 @@
+{#- Machine card (design §6.8). Expects `card: views::MachineCard`.
+    The whole card is one link: the name's ::after covers the card. -#}
+<article class="mcard">
+  <figure class="mcard__figure"><img class="mcard__ill" src="{{ card.machine.illustration.svg_path() }}" alt="" width="{{ card.machine.illustration.svg_size().0 }}" height="{{ card.machine.illustration.svg_size().1 }}"></figure>
+  <div class="mcard__body">
+    <p class="mcard__cat">{{ card.machine.class_and_no() }}</p>
+    <h3 class="mcard__name"><a class="mcard__link" href="/mashini/{{ card.machine.slug }}">{{ card.machine.name }}</a></h3>
+    <dl class="mcard__specs">
+      <div class="mcard__spec"><dt class="mcard__k">Тегло</dt><dd class="mcard__v">{{ crate::format::kg(*card.machine.weight_kg) }}</dd></div>
+      <div class="mcard__spec"><dt class="mcard__k">Копае до</dt><dd class="mcard__v">{{ crate::format::meters(*card.machine.dig_depth_mm) }}</dd></div>
+      <div class="mcard__spec"><dt class="mcard__k">Ширина</dt><dd class="mcard__v">{{ crate::format::meters(*card.machine.width_mm) }}</dd></div>
+      <div class="mcard__spec"><dt class="mcard__k">Двигател</dt><dd class="mcard__v">{{ crate::format::kw(*card.machine.engine_kw) }}</dd></div>
+    </dl>
+    <div class="mcard__foot">
+      <p><span class="mcard__price"><data value="{{ card.machine.price_per_day_cents }}" data-net>{{ crate::format::money(*card.machine.price_per_day_cents) }}</data></span><span class="mcard__per">на ден, <span data-vat-label>без ДДС</span></span></p>
+      {% let availability = card.availability %}{% include "partials/availability_badge.html" %}
+    </div>
+    <p class="mcard__week">От 7 дни: <data value="{{ card.machine.week_price_cents() }}" data-net>{{ crate::format::money(card.machine.week_price_cents()) }}</data> на ден</p>
+  </div>
+</article>
