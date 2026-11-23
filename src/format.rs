@@ -106,9 +106,14 @@ pub fn kg(weight: i64) -> String {
     format!("{}{NBSP}кг", number(weight))
 }
 
+/// One decimal with a comma: 34.7 → „34,7“ (the data plate prints the unit apart).
+pub fn decimal(x: f64) -> String {
+    format!("{x:.1}").replace('.', ",")
+}
+
 /// Engine power: 34.7 → „34,7 kW“.
 pub fn kw(power: f64) -> String {
-    format!("{:.1}{NBSP}kW", power).replace('.', ",")
+    format!("{}{NBSP}kW", decimal(power))
 }
 
 /// Full date for prose: „9 октомври 2026“.

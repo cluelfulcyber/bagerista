@@ -167,6 +167,11 @@ pub struct CurrentUser(pub Option<User>);
 #[derive(Debug, Clone)]
 pub struct RequireClient(pub User);
 
+/// Any logged-in user, client or administrator (the printable quote).
+/// Guests are redirected to the login page.
+#[derive(Debug, Clone)]
+pub struct RequireUser(pub User);
+
 /// A logged-in administrator. Guests are redirected to the login page,
 /// clients get 403 „Нямате достъп до тази страница.“
 #[derive(Debug, Clone)]
@@ -237,6 +242,17 @@ impl FromRequestParts<AppState> for RequireClient {
                 "Нямате достъп до тази страница.",
                 CLIENT_ONLY_MESSAGE,
             )),
+            None => Err(login_redirect(parts)),
+        }
+    }
+}
+
+impl FromRequestParts<AppState> for RequireUser {
+    type Rejection = Response;
+
+    async fn from_request_parts(parts: &mut Parts, state: &AppState) -> Result<Self, Self::Rejection> {
+        match load_user(parts, state).await.map_err(IntoResponse::into_response)? {
+            Some(user) => Ok(RequireUser(user)),
             None => Err(login_redirect(parts)),
         }
     }

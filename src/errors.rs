@@ -4,8 +4,11 @@
 //! conversion below turns every error into a Bulgarian error page with the
 //! right HTTP status. Technical details (SQL errors…) are only logged.
 
+use askama::Template;
 use axum::http::StatusCode;
 use axum::response::{Html, IntoResponse, Response};
+
+use crate::routes::page::{Layout, Nav};
 
 #[derive(Debug)]
 pub enum AppError {
@@ -117,33 +120,60 @@ impl IntoResponse for AppError {
     }
 }
 
-/// Renders a minimal Bulgarian error page.
-///
-/// TEMPORARY: part 2 replaces the body with the `errors/error.html` template
-/// (normal site layout); the signature stays the same.
+/// The error page (`templates/errors/error.html`): the normal site layout with
+/// the code as a giant numeral, a title, a message and two links.
+#[derive(Template)]
+#[template(path = "errors/error.html")]
+pub struct ErrorPage {
+    pub layout: Layout,
+    pub code: u16,
+    pub title: String,
+    pub message: String,
+}
+
+impl ErrorPage {
+    /// 5xx pages offer „Опитай отново“ instead of „Към каталога“.
+    pub fn is_server_error(&self) -> bool {
+        self.code >= 500
+    }
+}
+
+/// Attached to every error response, so the htmx middleware in `lib.rs` can
+/// replace the whole page with a small alert when htmx asked for a fragment.
+#[derive(Debug, Clone)]
+pub struct ErrorInfo {
+    pub title: String,
+    pub message: String,
+}
+
+/// Renders the Bulgarian error page with a guest header (used where there is
+/// no request context, e.g. inside middleware or `AppError::into_response`).
 pub fn error_page(status: StatusCode, title: &str, message: &str) -> Response {
-    let body = format!(
-        "<!doctype html>\n<html lang=\"bg\"><head><meta charset=\"utf-8\">\
-         <title>{title}: Багериста</title></head><body><main>\
-         <p>{code}</p><h1>{title}</h1><p>{message}</p>\
-         <p><a href=\"/katalog\">Към каталога</a> · <a href=\"/\">Начална страница</a></p>\
-         </main></body></html>",
-        code = status.as_u16(),
-        title = escape_html(title),
-        message = escape_html(message),
-    );
-    (status, Html(body)).into_response()
+    error_page_with(Layout::guest(), status, title, message)
 }
 
-/// Fallback handler for unknown URLs → Bulgarian 404 page.
-pub async fn not_found() -> AppError {
-    AppError::NotFound
+/// Renders the error page inside the given layout (user-aware header).
+pub fn error_page_with(layout: Layout, status: StatusCode, title: &str, message: &str) -> Response {
+    let page = ErrorPage {
+        layout: layout.titled(title.trim_end_matches('.'), Nav::None),
+        code: status.as_u16(),
+        title: title.to_string(),
+        message: message.to_string(),
+    };
+    let mut response = match page.render() {
+        Ok(html) => (status, Html(html)).into_response(),
+        // The template itself failed: fall back to plain text, never panic.
+        Err(err) => {
+            tracing::error!("error page template: {err}");
+            (status, format!("{title}\n{message}")).into_response()
+        }
+    };
+    response.extensions_mut().insert(ErrorInfo { title: title.to_string(), message: message.to_string() });
+    response
 }
 
-/// Minimal HTML escaping for the temporary error page.
-fn escape_html(text: &str) -> String {
-    text.replace('&', "&amp;")
-        .replace('<', "&lt;")
-        .replace('>', "&gt;")
-        .replace('"', "&quot;")
+/// Fallback handler for unknown URLs → Bulgarian 404 page with the visitor's header.
+pub async fn not_found(layout: Layout) -> Response {
+    let (title, message) = AppError::NotFound.title_and_message();
+    error_page_with(layout, StatusCode::NOT_FOUND, title, &message)
 }
