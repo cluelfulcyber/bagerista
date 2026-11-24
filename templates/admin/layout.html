@@ -1,0 +1,47 @@
+{#- Admin layout (design §6.25): dark sidebar + workspace. Every admin page
+    does {% extends "admin/layout.html" %}, fills {% block content %} and has the
+    field `admin: routes::admin::AdminPage`. Optional blocks: top_action (the
+    primary button next to the heading), scripts. -#}
+<!doctype html>
+<html lang="bg">
+<head>
+{% let layout = admin.layout %}
+{% include "partials/head.html" %}
+<link rel="stylesheet" href="/static/css/admin.css">
+{% block head %}{% endblock %}
+</head>
+<body hx-headers='{"X-CSRF-Token": "{{ admin.layout.csrf_token }}"}'>
+<a class="skip-link" href="#main">Към съдържанието</a>
+<div class="admin">
+  <aside class="admin-side on-dark" aria-label="Администрация">
+    <a class="admin-side__brand" href="/admin">{% include "partials/brand_mark.html" %}<span>Багериста<small>администрация</small></span></a>
+    <nav aria-label="Меню на администрацията">
+      <ul class="admin-nav__list">
+        <li><a class="admin-nav__link" href="/admin"{% if admin.nav_is("tablo") %} aria-current="page"{% endif %}>Табло</a></li>
+        <li><a class="admin-nav__link" href="/admin/zayavki"{% if admin.nav_is("zayavki") %} aria-current="page"{% endif %}>Заявки{% if admin.new_requests > 0 %} <span class="count" aria-label="{{ admin.new_requests }} нови">{{ admin.new_requests }}</span>{% endif %}</a></li>
+        <li><a class="admin-nav__link" href="/admin/kalendar"{% if admin.nav_is("kalendar") %} aria-current="page"{% endif %}>Календар на парка</a></li>
+        <li><a class="admin-nav__link" href="/admin/mashini"{% if admin.nav_is("mashini") %} aria-current="page"{% endif %}>Машини</a></li>
+        <li><a class="admin-nav__link" href="/admin/prikachni"{% if admin.nav_is("prikachni") %} aria-current="page"{% endif %}>Приставки</a></li>
+        <li><a class="admin-nav__link" href="/admin/obsluzhvane"{% if admin.nav_is("obsluzhvane") %} aria-current="page"{% endif %}>Обслужване{% if admin.service_alerts > 0 %} <span class="count" aria-label="{{ admin.service_alerts }} с просрочено обслужване">{{ admin.service_alerts }}</span>{% endif %}</a></li>
+        <li><a class="admin-nav__link" href="/admin/klienti"{% if admin.nav_is("klienti") %} aria-current="page"{% endif %}>Клиенти</a></li>
+        <li><a class="admin-nav__link" href="/">Към сайта</a></li>
+      </ul>
+    </nav>
+    <div class="admin-side__user"><span>{{ admin.admin.full_name }}</span>{% let logout_class = "btn btn--sm btn--ghost" %}{% include "partials/logout_form.html" %}</div>
+  </aside>
+  <main class="admin-main" id="main">
+    <div class="admin-top">
+      <div><h1 class="admin-top__title">{{ admin.heading }}</h1><p class="admin-top__sub">{{ admin.today_text() }}</p></div>
+      {% block top_action %}{% endblock %}
+    </div>
+    {%- if let Some(flash) = admin.layout.flash %}
+    <div class="flashes">{% include "partials/flash.html" %}</div>
+    {%- endif %}
+    {% block content %}{% endblock %}
+  </main>
+</div>
+<script src="/static/js/htmx.min.js" defer></script>
+<script src="/static/js/nav.js" defer></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
