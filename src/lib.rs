@@ -30,7 +30,7 @@ use axum::extract::{DefaultBodyLimit, Request};
 use axum::http::HeaderValue;
 use axum::http::header;
 use axum::middleware::{self, Next};
-use axum::response::Response;
+use axum::response::{IntoResponse, Response};
 use chrono::NaiveDate;
 use tower_sessions::cookie::SameSite;
 use tower_sessions::cookie::time::Duration;
@@ -100,6 +100,7 @@ pub fn with_layers(router: Router<AppState>, state: AppState) -> Router {
 
     router
         .layer(middleware::from_fn(csrf::csrf_guard))
+        .layer(middleware::from_fn(htmx_errors))
         .layer(sessions)
         .layer(middleware::from_fn(security_headers))
         .layer(DefaultBodyLimit::max(MAX_BODY_BYTES))
@@ -114,6 +115,26 @@ async fn security_headers(request: Request, next: Next) -> Response {
     headers.insert(header::X_CONTENT_TYPE_OPTIONS, HeaderValue::from_static("nosniff"));
     headers.insert(header::REFERRER_POLICY, HeaderValue::from_static("same-origin"));
     response
+}
+
+/// For htmx requests an error must not replace part of the page with a whole
+/// error page: the response becomes a small alert (`partials/flash.html`)
+/// with the same status. Error responses are recognised by the `ErrorInfo`
+/// extension that `errors::error_page` attaches.
+async fn htmx_errors(request: Request, next: Next) -> Response {
+    let from_htmx = routes::page::is_htmx(request.headers());
+    let response = next.run(request).await;
+    if !from_htmx {
+        return response;
+    }
+    let Some(info) = response.extensions().get::<errors::ErrorInfo>().cloned() else {
+        return response;
+    };
+    let fragment = routes::page::FlashPartial { flash: routes::page::Flash::error(&info.title, &info.message) };
+    match askama::Template::render(&fragment) {
+        Ok(html) => (response.status(), axum::response::Html(html)).into_response(),
+        Err(_) => response,
+    }
 }
 
 /// Waits for Ctrl+C, then lets running requests finish.

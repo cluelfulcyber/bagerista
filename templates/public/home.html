@@ -1,0 +1,234 @@
+{#- Home page. Struct: routes::public::HomePage.
+    Every number on this page comes from the database or from the pricing constants. -#}
+{% extends "base.html" %}
+
+{% block content %}
+  {#- ================= HERO ================= #}
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero__grid">
+      <div class="hero__copy">
+        <h1 class="hero__title" id="hero-title">Багер, който минава през портата и копае до нужната дълбочина</h1>
+        <p class="lede hero__lede">{{ self.hero_lede() }}</p>
+        <div class="hero__actions">
+          <a class="btn btn--lg" href="#klasove">Разгледай машините</a>
+          <a class="btn btn--lg btn--ghost" href="#pomoshtnik">Кой багер ми трябва?</a>
+        </div>
+        <dl class="tblock tblock--2 hero__facts">
+          <div class="tblock__cell"><dt class="tblock__k">Доставка</dt><dd class="tblock__v">до {{ self.max_km() }} км от Пловдив</dd></div>
+          <div class="tblock__cell"><dt class="tblock__k">Потвърждение на заявка</dt><dd class="tblock__v">до 2 работни часа</dd></div>
+          <div class="tblock__cell"><dt class="tblock__k">Цени</dt><dd class="tblock__v">в евро, без ДДС</dd></div>
+          <div class="tblock__cell"><dt class="tblock__k">Наем от 7 дни</dt><dd class="tblock__v">{{ self.first_discount() }}</dd></div>
+        </dl>
+      </div>
+
+      <figure class="hero__figure">
+        <div class="drawing" data-hero-drawing data-control="hero-control">
+{% include "partials/hero_drawing.html" %}
+        </div>
+        <div class="hero__control" id="hero-control" hidden>
+          <label class="hero__control-label" for="dig">Спуснете рамото и вижте докъде стига</label>
+          <input class="range" id="dig" type="range" min="0" max="100" value="100" aria-describedby="dig-out">
+          <output class="hero__out" id="dig-out" for="dig" aria-live="polite">3&nbsp;800 мм</output>
+        </div>
+        <figcaption class="fig__cap"><span class="fig__no">Фиг. 1.</span>
+          {%- if let Some(m) = hero %} <a href="/mashini/{{ m.slug }}">{{ m.name }}</a>, {{ self.hero_class_and_weight() }}, начертан в мащаб спрямо човек с ръст 1,80&nbsp;м.
+          {%- else %} Мидибагер, начертан в мащаб спрямо човек с ръст 1,80&nbsp;м.
+          {%- endif %} Пунктираното рамо е най-ниското положение: 3,80&nbsp;м под терена.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  {#- ================= SITE BOARD QUICK FORM ================= #}
+  <section class="board-zone" aria-labelledby="board-title">
+    <div class="wrap">
+      <form class="board" action="/pomoshtnik/rezultat" method="get">
+        <div class="board__head">
+          <h2 class="board__title" id="board-title">Какво ще копаете?</h2>
+          <p class="board__note">Три отговора и ви показваме машините, които стават.</p>
+        </div>
+        <div class="board__fields">
+          <div class="field">
+            <label class="field__label" for="b-rabota">Работа</label>
+            <select class="select" id="b-rabota" name="rabota">
+              {%- for job in jobs %}
+              <option value="{{ job.param() }}"{% if *job == self.board.job %} selected{% endif %}>{{ job.label() }}</option>
+              {%- endfor %}
+            </select>
+          </div>
+          <div class="field">
+            <label class="field__label" for="b-dalbochina">Дълбочина</label>
+            <select class="select" id="b-dalbochina" name="dalbochina">
+              {%- for depth in depths %}
+              <option value="{{ depth.param() }}"{% if *depth == self.board.depth %} selected{% endif %}>{{ depth.label() }}</option>
+              {%- endfor %}
+            </select>
+          </div>
+          <div class="field">
+            <label class="field__label" for="b-dostap">Най-тясното място на входа</label>
+            <select class="select" id="b-dostap" name="dostap">
+              {%- for access in accesses %}
+              <option value="{{ access.param() }}"{% if *access == self.board.access %} selected{% endif %}>{{ access.label() }}</option>
+              {%- endfor %}
+            </select>
+          </div>
+          <input type="hidden" name="teren" value="{{ board.terrain.param() }}">
+          <button class="btn btn--lg" type="submit">Покажи машините</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  {#- ================= CATEGORY RULER ================= #}
+  <section class="section" id="klasove" aria-labelledby="ruler-title">
+    <div class="wrap">
+      <div class="section-head section-head--split">
+        <h2 id="ruler-title">Пет класа машини, подредени по тегло</h2>
+        <p class="section-head__text">Класовете се застъпват: тежкият мини багер и лекият мидибагер копаят почти еднакво дълбоко. Изберете по входа на обекта и по дълбочината, теглото идва след това.</p>
+      </div>
+      <ol class="ruler">
+        {%- for row in ruler %}
+        <li class="ruler__row{% if row.current %} ruler__row--current{% endif %}">
+          <img class="ruler__ill" src="{{ row.class.svg_path() }}" alt="" width="{{ row.class.svg_size().0 }}" height="{{ row.class.svg_size().1 }}">
+          <h3 class="ruler__name"><a class="ruler__link" href="/katalog?kategoria={{ row.stats.slug }}">{{ row.stats.name }}</a></h3>
+          <div class="ruler__track" aria-hidden="true"><span class="ruler__range" style="{{ row.css_vars() }}"></span></div>
+          <p class="ruler__meta"><b>{{ row.weight_range() }}</b><br>{{ row.count_text() }}, от <data value="{{ row.min_price() }}" data-net>{{ crate::format::money(row.min_price()) }}</data></p>
+        </li>
+        {%- endfor %}
+      </ol>
+      <div class="ruler__axis" aria-hidden="true">
+        <div class="ruler__ticks">
+          <span class="ruler__tick" style="--at:0">1 000</span>
+          <span class="ruler__tick" style="--at:.2">2 000</span>
+          <span class="ruler__tick" style="--at:.464">5 000</span>
+          <span class="ruler__tick" style="--at:.664">10 000</span>
+          <span class="ruler__tick" style="--at:.864">20 000</span>
+          <span class="ruler__tick" style="--at:1">32 000</span>
+        </div>
+        <span class="ruler__title">работно тегло, кг (логаритмична скала)</span>
+      </div>
+    </div>
+  </section>
+
+  {#- ================= SAME-SCALE LINE-UP ================= #}
+  <section class="section section--rule" aria-labelledby="lineup-title">
+    <div class="wrap">
+      <div class="section-head section-head--split">
+        <h2 id="lineup-title">Всички класове в един мащаб</h2>
+        <p class="section-head__text">Човекът вляво е висок 1,80&nbsp;м. Така виждате колко място ще заеме машината в двора ви, без да четете таблици.</p>
+      </div>
+      <figure class="fig">
+        <div class="lineup">
+          {%- for item in lineup %}
+          <div class="lineup__item"><img class="lineup__ill" style="--w:{{ item.width }}" src="{{ item.src }}" alt="{{ item.alt }}" width="{{ item.width }}" height="{{ item.height }}"><p class="lineup__cap"><b>{{ item.name }}</b>{{ item.caption }}</p></div>
+          {%- endfor %}
+        </div>
+        <figcaption class="fig__cap"><span class="fig__no">Фиг. 2.</span> Най-голямата машина от всеки клас, начертана в един мащаб: 1 единица в чертежа е 10&nbsp;мм. Багер-товарачът е в транспортно положение.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  {#- ================= PRICE LIST ================= #}
+  <section class="section section--rule" id="ceni" aria-labelledby="prices-title">
+    <div class="wrap">
+      <div class="section-head section-head--split">
+        <h2 id="prices-title">Цени на ден</h2>
+        <p class="section-head__text">Цените са в евро, <span data-vat-label>без ДДС</span>. {{ self.discounts_text() }}</p>
+      </div>
+      <div class="table-wrap">
+        <table class="table table--stack">
+          <thead>
+            <tr><th scope="col">Машина</th><th scope="col" class="is-num">Тегло, кг</th><th scope="col" class="is-num">Копае до</th><th scope="col" class="is-num">Ширина</th><th scope="col" class="is-num">На ден</th><th scope="col" class="is-num">На ден от 7 дни</th><th scope="col">Наличност</th></tr>
+          </thead>
+          <tbody>
+            {%- for card in prices %}
+            <tr>
+              <td class="table__lead" data-label="Машина"><div class="table__machine">{% let ill = card.machine.illustration %}{% let ill_class = "table__ill" %}{% include "partials/illustration.html" %}<span><span class="table__name"><a href="/mashini/{{ card.machine.slug }}">{{ card.machine.name }}</a></span><span class="table__code">{{ card.machine.class_and_no() }}</span></span></div></td>
+              <td class="is-num" data-label="Тегло, кг">{{ crate::format::number(*card.machine.weight_kg) }}</td>
+              <td class="is-num" data-label="Копае до">{{ crate::format::meters(*card.machine.dig_depth_mm) }}</td>
+              <td class="is-num" data-label="Ширина">{{ crate::format::meters(*card.machine.width_mm) }}</td>
+              <td class="is-num" data-label="На ден"><b><data value="{{ card.machine.price_per_day_cents }}" data-net>{{ crate::format::money(*card.machine.price_per_day_cents) }}</data></b></td>
+              <td class="is-num" data-label="На ден от 7 дни"><data value="{{ card.machine.week_price_cents() }}" data-net>{{ crate::format::money(card.machine.week_price_cents()) }}</data></td>
+              <td data-label="Наличност">{% let availability = card.availability %}{% include "partials/availability_badge.html" %}</td>
+            </tr>
+            {%- endfor %}
+          </tbody>
+        </table>
+      </div>
+      <p class="small home__more"><a href="/katalog"><b>{{ self.catalog_link_text() }}</b></a>. {{ self.transport_text() }} <a href="/ceni">Как се смята цената</a></p>
+    </div>
+  </section>
+
+  {#- ================= WIZARD TEASER ================= #}
+  <section class="section on-dark" id="pomoshtnik" aria-labelledby="wiz-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="wiz-title">Кой багер ми трябва?</h2>
+        <p class="section-head__text">Изберете работата. Пунктирът на разреза показва колко дълбоко ще копаете, а стълбовете докъде стига всеки клас.</p>
+      </div>
+      <div class="wizard">
+        <form action="/pomoshtnik" method="get">
+          <fieldset class="fieldset wizard__step">
+            <legend class="wizard__q"><span class="wizard__n">1</span> Каква работа ще вършите?</legend>
+            <div class="tiles">
+              {%- for t in teaser %}
+              <label class="tile"><input class="tile__input" type="radio" name="rabota" value="{{ t.job.param() }}" data-need="{{ t.need }}"{% if t.job == self.default_job() %} checked{% endif %}><span class="tile__body"><span class="tile__title">{{ t.job.label() }}</span><span class="tile__meta">{{ t.meta }}</span></span><template><p><b>{{ t.lead }}</b> {{ t.text }}</p></template></label>
+              {%- endfor %}
+            </div>
+          </fieldset>
+          <div class="wizard__answer" data-wizard-answer aria-live="polite">
+            {%- if let Some(t) = self.default_answer() %}
+            <p><b>{{ t.lead }}</b> {{ t.text }}</p>
+            {%- endif %}
+          </div>
+          <div class="cluster wizard__actions">
+            <button class="btn btn--lg" type="submit">Още 3 въпроса и препоръка</button>
+          </div>
+        </form>
+
+        <figure class="fig">
+          <div class="soilchart" data-soilchart style="--need:1.5">
+            <div class="soilchart__head" aria-hidden="true"></div>
+            <div class="soilchart__axis" aria-hidden="true">
+              <span class="soilchart__tick" style="--at:0">0 м</span><span class="soilchart__tick" style="--at:1">1</span><span class="soilchart__tick" style="--at:2">2</span><span class="soilchart__tick" style="--at:3">3</span><span class="soilchart__tick" style="--at:4">4</span><span class="soilchart__tick" style="--at:5">5</span><span class="soilchart__tick" style="--at:6">6</span><span class="soilchart__tick" style="--at:7">7</span>
+            </div>
+            <div class="soilchart__ground" role="img" aria-label="{{ self.soil_label() }}">
+              <div class="soilchart__strata" aria-hidden="true">
+                <span class="soilchart__stratum soilchart__stratum--light" style="--at:.02">хумус</span>
+                <span class="soilchart__stratum" style="--at:1.1">глина</span>
+                <span class="soilchart__stratum" style="--at:4.6">чакъл</span>
+              </div>
+              <ol class="soilchart__cols">
+                {%- for col in soil %}
+                <li class="soilchart__col{% if col.is_short %} is-short{% endif %}" style="--d:{{ col.depth_css() }}" data-depth="{{ col.depth_css() }}"><span class="soilchart__name">{{ col.short_name }}</span><span class="soilchart__bar"></span><span class="soilchart__depth">{{ col.depth_label() }}</span></li>
+                {%- endfor %}
+              </ol>
+              <div class="soilchart__need" aria-hidden="true"><span class="soilchart__need-label">{{ self.default_need_label() }}</span></div>
+            </div>
+          </div>
+          <figcaption class="fig__cap"><span class="fig__no">Фиг. 3.</span> Разрез на типична почва около Пловдив. Стълбовете показват най-дълбоката машина от всеки клас.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  {#- ================= HOW RENTING WORKS ================= #}
+  <section class="section" id="kak" aria-labelledby="steps-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="steps-title">Как се наема</h2>
+        <p class="section-head__text">Четири стъпки. Статусът на заявката виждате в „Моите заявки“.</p>
+      </div>
+      <ol class="steps">
+        <li class="step"><span class="step__n">1</span><h3 class="step__title">Изберете машина и дни</h3><p class="step__text">В календара на всяка машина се виждат заетите дни. Цената се смята веднага, с всички добавки.</p></li>
+        <li class="step"><span class="step__n">2</span><h3 class="step__title">Изпратете заявка</h3><p class="step__text">Трябва ви профил. Заявката влиза при нас със статус</p><span><span class="status status--new">Нова</span></span></li>
+        <li class="step"><span class="step__n">3</span><h3 class="step__title">Потвърждаваме до 2 работни часа</h3><p class="step__text">Обаждаме се, уточняваме адреса и ви пращаме оферта за печат.</p><span><span class="status status--approved">Одобрена</span></span></li>
+        <li class="step"><span class="step__n">4</span><h3 class="step__title">Докарваме машината</h3><p class="step__text">С платформа до обекта. Докато работите, заявката е активна, след връщането е приключена.</p><span class="cluster"><span class="status status--active">Активна</span><span class="status status--completed">Приключена</span></span></li>
+      </ol>
+    </div>
+  </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/hero.js" defer></script>
+<script src="/static/js/wizard.js" defer></script>
+{% endblock %}
